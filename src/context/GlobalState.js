@@ -1,23 +1,28 @@
-import React, { createContext, useReducer } from 'react'
+import React, { createContext, useReducer, useEffect } from 'react'
 import AppReducer from './AppReducer'
 
 const initialState = {
-  incomeTransactions: [
-    { id: 1, incomeText: 'salary 1', incomeAmount: 15000 },
-    { id: 2, incomeText: 'salary 2', incomeAmount: 100 },
-    { id: 3, incomeText: 'salaru', incomeAmount: 15000 },
-  ],
-  expenseTransactions: [
-    { id: 4, expenseText: 'rent1', expenseAmount: 1000 },
-    { id: 5, expenseText: 'rent2', expenseAmount: 900 },
-    { id: 6, expenseText: 'rent3', expenseAmount: 8000 },
-  ],
+  incomeTransactions:
+    JSON.parse(localStorage.getItem('incomeTransactions')) || [],
+  expenseTransactions:
+    JSON.parse(localStorage.getItem('expenseTransactions')) || [],
 }
 
 export const GlobalContext = createContext(initialState)
 
 export const GlobalContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(AppReducer, initialState)
+
+  useEffect(() => {
+    localStorage.setItem(
+      'incomeTransactions',
+      JSON.stringify(state.incomeTransactions)
+    )
+    localStorage.setItem(
+      'expenseTransactions',
+      JSON.stringify(state.expenseTransactions)
+    )
+  })
 
   const addIncome = (incomeTransaction) => {
     dispatch({
@@ -33,6 +38,13 @@ export const GlobalContextProvider = ({ children }) => {
     })
   }
 
+  const deleteTransaction = (id) => {
+    dispatch({
+      type: 'DELETE_TRANSACTION',
+      payload: id,
+    })
+  }
+
   return (
     <GlobalContext.Provider
       value={{
@@ -40,6 +52,7 @@ export const GlobalContextProvider = ({ children }) => {
         expenseTransactions: state.expenseTransactions,
         addIncome,
         addExpense,
+        deleteTransaction,
       }}
     >
       {children}

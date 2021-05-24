@@ -7,7 +7,7 @@ const AddTransaction = () => {
 
   const [income, setIncome] = useState({
     incomeText: '',
-    incomeAmount: 0,
+    incomeAmount: null,
   })
 
   const { incomeText, incomeAmount } = income
@@ -19,23 +19,25 @@ const AddTransaction = () => {
   const onSubmitIncome = (e) => {
     e.preventDefault()
 
-    const newIncomeTransaction = {
-      id: uuidv4(),
-      incomeText,
-      incomeAmount: incomeAmount * 1,
+    if (incomeText !== '') {
+      const newIncomeTransaction = {
+        id: uuidv4(),
+        incomeText,
+        incomeAmount: incomeAmount * 1,
+      }
+
+      addIncome(newIncomeTransaction)
+
+      setIncome({
+        incomeText: '',
+        incomeAmount: '',
+      })
     }
-
-    addIncome(newIncomeTransaction)
-
-    setIncome({
-      incomeText: '',
-      incomeAmount: 0,
-    })
   }
 
   const [expense, setExpense] = useState({
     expenseText: '',
-    expenseAmount: 0,
+    expenseAmount: null,
   })
 
   const { expenseText, expenseAmount } = expense
@@ -47,18 +49,20 @@ const AddTransaction = () => {
   const onSubmitExpense = (e) => {
     e.preventDefault()
 
-    const newExpenseTransaction = {
-      id: uuidv4(),
-      expenseText,
-      expenseAmount: expenseAmount * 1,
+    if (expenseText !== '') {
+      const newExpenseTransaction = {
+        id: uuidv4(),
+        expenseText,
+        expenseAmount: expenseAmount * 1,
+      }
+
+      addExpense(newExpenseTransaction)
+
+      setExpense({
+        expenseText: '',
+        expenseAmount: '',
+      })
     }
-
-    addExpense(newExpenseTransaction)
-
-    setExpense({
-      expenseText: '',
-      expenseAmount: 0,
-    })
   }
 
   return (
